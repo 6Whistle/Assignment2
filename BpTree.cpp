@@ -1,9 +1,134 @@
 #include "BpTree.h"
 bool BpTree::Insert(VaccinationData* newData){
+    if(root == NULL)
+    {
+        BpTreeDataNode *DataNode = new BpTreeDataNode;
 
+        DataNode->insertDataMap(newData->GetUserName(), newData);
+        root = DataNode;
+        return true;
+    }
+
+    BpTreeNode *pNode = root;
+    while(pNode->getMostLeftChild())
+    {
+        auto iter = pNode->getIndexMap()->end();
+        iter--;
+        while(true)
+        {
+            if((iter->first).compare(newData->GetUserName()) > 0)
+            {
+                pNode = iter->second;   
+                break;
+            }
+            else if(iter == pNode->getIndexMap()->begin())
+            {
+                pNode = pNode->getMostLeftChild();
+                break; 
+            }
+            else
+            {
+                iter--;
+            }
+        }
+    }
+
+    for(auto iter = pNode->getDataMap()->begin() ; iter != pNode->getDataMap()->end() ; iter++)
+    {
+        if(iter->first.compare(newData->GetUserName()) == 0)
+        {
+            if(iter->second->GetVaccineName().compare("Janssen") == 0 && iter->second->GetTimes() == 1)
+            {
+                return false;
+            }
+            else if(iter->second->GetTimes() == 2)
+            {
+                return false;
+            }
+            
+            iter->second->SetTimesInc();
+            return true;
+        }
+    }
+    
+    pNode->insertDataMap(newData->GetUserName(), newData);
+
+    if(exceedDataNode(pNode))
+    {
+        if(pNode->getParent() == NULL)
+        {
+            BpTreeIndexNode* newNode = new BpTreeIndexNode;
+            pNode->setParent(newNode);
+            newNode->setMostLeftChild(pNode);
+            root = newNode;
+            splitDataNode(pNode);
+
+            return true;
+        }
+        splitDataNode(pNode);
+        
+        
+        while(true)
+        {
+            pNode = pNode->getParent();
+
+            if(exceedIndexNode(pNode))
+            {
+                if(pNode->getParent() == NULL)
+                {
+                    BpTreeIndexNode* newNode = new BpTreeIndexNode;
+                    pNode->setParent(newNode);
+                    newNode->setMostLeftChild(pNode);
+                    root = newNode;
+                    splitDataNode(pNode);
+
+                    return true;
+                }
+                else
+                {
+                    splitIndexNode(pNode);
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
 }
-BpTreeNode * BpTree::searchDataNode(string n) {
 
+BpTreeNode * BpTree::searchDataNode(string n) {
+    if(root == NULL)
+    {
+        return NULL;
+    }
+    
+    BpTreeNode *pNode = root;
+
+    while(pNode->getMostLeftChild())
+    {
+        auto iter = pNode->getIndexMap()->end();
+        iter--;
+        while(true)
+        {
+            if((iter->first).compare(n) > 0)
+            {
+                pNode = iter->second;   
+                break;
+            }
+            else if(iter == pNode->getIndexMap()->begin())
+            {
+                pNode = pNode->getMostLeftChild();
+                break; 
+            }
+            else
+            {
+                iter--;
+            }
+        }
+    }
+
+    return pNode;
 }
 void BpTree::splitDataNode(BpTreeNode* pDataNode) {
     BpTreeDataNode* newDataNode = new BpTreeDataNode;
@@ -29,41 +154,20 @@ void BpTree::splitDataNode(BpTreeNode* pDataNode) {
 }
 
 void BpTree::splitIndexNode(BpTreeNode* pIndexNode) {
-    BpTreeIndexNode *newIndexchildNode1 = new BpTreeIndexNode;
-    BpTreeIndexNode *newIndexchildNode2 = new BpTreeIndexNode;
+    BpTreeIndexNode *newIndexchildNode = new BpTreeIndexNode;
     
-    /*left Index Node*/
     auto iter = pIndexNode->getIndexMap()->begin();
-    
-    newIndexchildNode1->setMostLeftChild(pIndexNode->getMostLeftChild());
-    newIndexchildNode1->getMostLeftChild()->setParent(newIndexchildNode1);
+    iter++;
 
-    newIndexchildNode1->insertIndexMap(iter->first, iter->second);
-    pIndexNode->getIndexMap()->erase(iter);
-    newIndexchildNode1->getIndexMap()->begin()->second->setParent(newIndexchildNode1);
-
-    newIndexchildNode1->setParent(pIndexNode);
-
-
-    /*Left Index Node*/
-    iter = pIndexNode->getIndexMap()->end();
-    iter--;
-    
-    newIndexchildNode2->setMostLeftChild(pIndexNode->getIndexMap()->begin()->second);
-    newIndexchildNode2->getMostLeftChild()->setParent(newIndexchildNode2);
-
-    newIndexchildNode2->insertIndexMap(iter->first, iter->second);
+    string insert_string = iter->first;
+    newIndexchildNode->setMostLeftChild(iter->second);
+    iter = pIndexNode->getIndexMap()->erase(iter);
+    newIndexchildNode->insertIndexMap(iter->first, iter->second);
     pIndexNode->getIndexMap()->erase(iter);
     
-    newIndexchildNode2->getIndexMap()->begin()->second->setParent(newIndexchildNode2);
-
-    newIndexchildNode2->setParent(pIndexNode);
-
-    /*parent Node*/
-    pIndexNode->setMostLeftChild(newIndexchildNode1);
-    string str = pIndexNode->getIndexMap()->begin()->first;
-    pIndexNode->getIndexMap()->clear();
-    pIndexNode->insertIndexMap(str, newIndexchildNode2);
+    BpTreeNode* pParent = pIndexNode->getParent();
+    newIndexchildNode->setParent(pParent);
+    pParent->insertIndexMap(insert_string, newIndexchildNode);
 
     return;
 }
@@ -84,6 +188,11 @@ bool BpTree::exceedIndexNode(BpTreeNode* pIndexNode) {
 
 void BpTree::SearchRange(string start, string end) {
     
+    if(root == NULL)
+    {
+        return;
+    }
+
     BpTreeNode *pNode = root;
     
     while(pNode->getMostLeftChild())
@@ -119,14 +228,17 @@ void BpTree::SearchRange(string start, string end) {
     {
         VaccinationData* printData = iter->second;
         flog << printData->GetUserName() << " " << printData->GetVaccineName() << " " << printData->GetTimes() << " " << printData->GetAge() << " " << printData->GetLocationName() << endl;
+        iter++;
+
         if(iter == pNode->getDataMap()->end())
         {
             pNode = pNode->getNext();
+            if(pNode == NULL)
+            {
+                flog.close();
+                return;
+            }
             iter = pNode->getDataMap()->begin();
-        }
-        else
-        {
-            iter++;
         }
     }
 
@@ -136,7 +248,39 @@ void BpTree::SearchRange(string start, string end) {
 }
 
 void BpTree::Print() {
+    if(root == NULL)
+    {
+        return;
+    }
 
-    
+    BpTreeNode* pNode = root;
+    while(pNode->getMostLeftChild())
+    {
+        pNode = pNode->getMostLeftChild();
+    }
 
+    ofstream flog;
+    flog.open("log.txt", ios::app);
+
+    auto iter = pNode->getDataMap()->begin();
+
+    flog << "======= PRINT_BP =======" << endl;      
+    while(true)
+    {
+        VaccinationData* printData = iter->second;
+        flog << printData->GetUserName() << " " << printData->GetVaccineName() << " " << printData->GetTimes() << " " << printData->GetAge() << " " << printData->GetLocationName() << endl;
+        iter++;
+
+        if(iter == pNode->getDataMap()->end())
+        {
+            pNode = pNode->getNext();
+
+            if(pNode == NULL)
+            {
+                flog.close();
+                return;
+            }
+            iter = pNode->getDataMap()->begin();
+        }
+    }
 }
