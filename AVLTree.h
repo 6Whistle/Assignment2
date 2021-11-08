@@ -14,12 +14,15 @@ public:
 	AVLTree(){
 		root=NULL;
 	}
-	~AVLTree(){};
+	~AVLTree(){
+		DeleteTree();
+	};
 	bool		Insert(VaccinationData* pVac);
 	VaccinationData*	Search(string name);
 	void GetVector(vector<VaccinationData*>& v);
 	int compare_string(string a, string b);
-	
+	void DeleteTree(void);
+
 };
 
 #endif

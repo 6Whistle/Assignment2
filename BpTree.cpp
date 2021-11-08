@@ -47,6 +47,8 @@ bool BpTree::Insert(VaccinationData* newData){
             }
             
             iter->second->SetTimesInc();
+            delete newData;
+            newData = iter->second;
             return true;
         }
     }
@@ -235,13 +237,15 @@ void BpTree::SearchRange(string start, string end) {
             pNode = pNode->getNext();
             if(pNode == NULL)
             {
+                flog << "===========================" << endl;
                 flog.close();
                 return;
             }
             iter = pNode->getDataMap()->begin();
         }
     }
-
+    
+    flog << "===========================" << endl;
     flog.close();
 
     return;
@@ -282,5 +286,46 @@ void BpTree::Print() {
             }
             iter = pNode->getDataMap()->begin();
         }
+    }
+}
+
+void BpTree::DeleteBpTree(void){
+    if(root == NULL)
+    {
+        return;
+    }
+    
+    queue<BpTreeNode*> levelQ;
+
+    levelQ.push(root);
+
+    while(levelQ.front()->getMostLeftChild())
+    {
+       
+       levelQ.push(levelQ.front()->getMostLeftChild());
+       auto delMap = levelQ.front()->getIndexMap();
+       auto iter = delMap->begin();
+       while(~(delMap->empty()))
+       {
+           levelQ.push(iter->second);
+           iter = delMap->erase(iter);
+       }
+
+       delete levelQ.front();
+       levelQ.pop();
+    }
+
+    while(~(levelQ.empty()))
+    {
+        auto delMap = levelQ.front()->getDataMap();
+        auto iter = delMap->begin();
+        while(~(delMap->empty()))
+        {
+           delete iter->second;
+           iter = delMap->erase(iter);
+        }
+
+        delete levelQ.front();
+        levelQ.pop();
     }
 }

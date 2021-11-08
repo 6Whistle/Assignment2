@@ -18,11 +18,12 @@ public:
 	void	run(const char * command_txt);
 	bool	LOAD();
 	bool	VLOAD();
-	bool	ADD();
+	bool	ADD(char* pdata);
 	bool	SEARCH_BP(string name);
 	bool	SEARCH_BP(string start, string end);
 	bool	SEARCH_AVL(string name);
 	bool	VPRINT(string type_);
 	void	printErrorCode(int n);
+	bool InputVaccinationData(char* pData, VaccinationData* Vdata);
 };
 

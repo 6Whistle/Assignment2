@@ -18,6 +18,7 @@ public:
 		this->order = order;
 	}
 
+	BpTreeNode* GetRoot(void) {return root;}
 	bool		Insert(VaccinationData* newData);
 	bool		exceedDataNode(BpTreeNode* pDataNode);
 	bool		exceedIndexNode(BpTreeNode* pIndexNode);
@@ -26,6 +27,7 @@ public:
 	BpTreeNode*	searchDataNode(string n); //search VaccinationData node
 	void	SearchRange(string start, string end);
 	void	Print(); // print all 
+	void	DeleteBpTree(void);
 
 };
 

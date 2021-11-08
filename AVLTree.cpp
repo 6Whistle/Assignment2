@@ -184,11 +184,50 @@ bool AVLTree::Insert(VaccinationData* pVac){
 }
 
 void AVLTree::GetVector(vector<VaccinationData*>& v){
+    if(root == NULL)
+    {
+        return;
+    }
+    
+    queue<AVLNode*> levelQ;
+
+    levelQ.push(root);
+    v.clear();
+
+    for(int i = 0;!(levelQ.empty());i++)
+    {
+       v[i] = levelQ.front()->getVacData();
+       levelQ.push(levelQ.front()->getLeft());
+       levelQ.push(levelQ.front()->getRight());
+       levelQ.pop();
+    }
 
 }
 
 VaccinationData* AVLTree::Search(string name){
+    if(root == NULL)
+    {
+        return NULL;
+    }
 
+    AVLNode* pNode = root;
+    while(pNode)
+    {
+        if(compare_string(name, pNode->getVacData()->GetUserName()) == 0)
+        {
+            return pNode->getVacData();
+        }
+        else if(compare_string(name, pNode->getVacData()->GetUserName()) < 0)
+        {
+            pNode = pNode->getLeft();
+        }
+        else
+        {
+            pNode = pNode->getRight();
+        }
+    }
+
+    return NULL;
 }
 
 int AVLTree::compare_string(string a, string b){
@@ -230,4 +269,25 @@ int AVLTree::compare_string(string a, string b){
             return 1;
         }
     }
+}
+
+void AVLTree::DeleteTree(void){
+    if(root == NULL)
+    {
+        return;
+    }
+    
+    queue<AVLNode*> levelQ;
+
+    levelQ.push(root);
+
+    while(!(levelQ.empty()))
+    {
+       
+       levelQ.push(levelQ.front()->getLeft());
+       levelQ.push(levelQ.front()->getRight());
+       delete levelQ.front();
+       levelQ.pop();
+    }
+
 }
