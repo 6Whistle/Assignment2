@@ -18,6 +18,10 @@ public:
 		this->order = order;
 	}
 
+	~BpTree() {
+
+	}
+
 	BpTreeNode* GetRoot(void) {return root;}
 	bool		Insert(VaccinationData* newData);
 	bool		exceedDataNode(BpTreeNode* pDataNode);

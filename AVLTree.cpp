@@ -61,7 +61,8 @@ bool AVLTree::Insert(VaccinationData* pVac){
 
     if(compare_string(pVac->GetUserName(), a->getVacData()->GetUserName()) > 0)
     {
-        b = p->getRight();
+        b = a->getRight();
+        p = b;
         d = -1;
     }
     else
@@ -88,7 +89,7 @@ bool AVLTree::Insert(VaccinationData* pVac){
     if(a->getBF() == 0 || a->getBF() + d == 0)
     {
         a->setBF(a->getBF() + d);
-        return;
+        return true;
     }
 
     if(d == 1)
@@ -194,11 +195,17 @@ void AVLTree::GetVector(vector<VaccinationData*>& v){
     levelQ.push(root);
     v.clear();
 
-    for(int i = 0;!(levelQ.empty());i++)
+    while(!(levelQ.empty()))
     {
-       v[i] = levelQ.front()->getVacData();
-       levelQ.push(levelQ.front()->getLeft());
-       levelQ.push(levelQ.front()->getRight());
+       v.push_back(levelQ.front()->getVacData());
+       if (levelQ.front()->getLeft() != NULL)
+       {
+           levelQ.push(levelQ.front()->getLeft());
+       }
+       if (levelQ.front()->getRight() != NULL)
+       {
+           levelQ.push(levelQ.front()->getRight());
+       }
        levelQ.pop();
     }
 
@@ -234,8 +241,8 @@ int AVLTree::compare_string(string a, string b){
     
     for(int i = 0;;i++)
     {
-        char pa = a[0];
-        char pb = b[0];
+        char pa = a[i];
+        char pb = b[i];
 
         if(pa == '\0' && pb != '\0')
         {
@@ -252,12 +259,12 @@ int AVLTree::compare_string(string a, string b){
 
         if(islower(pa))
         {
-            toupper(pa);
+            pa = toupper(pa);
         }
         
         if(islower(pb))
         {
-            toupper(pb);
+            pa = toupper(pb);
         }
 
         if(pa < pb)
@@ -284,10 +291,19 @@ void AVLTree::DeleteTree(void){
     while(!(levelQ.empty()))
     {
        
-       levelQ.push(levelQ.front()->getLeft());
-       levelQ.push(levelQ.front()->getRight());
+       if (levelQ.front()->getLeft() != NULL)
+       {
+           levelQ.push(levelQ.front()->getLeft());
+       }
+       
+       if (levelQ.front()->getRight() != NULL)
+       {
+           levelQ.push(levelQ.front()->getRight());
+       }
+       
        delete levelQ.front();
        levelQ.pop();
     }
 
+    return;
 }

@@ -18,7 +18,9 @@ public:
 		pVaccinationData = NULL;
 		mBF = 0;
 	};
-	~AVLNode(){};
+	~AVLNode(){
+	
+	};
 
 	void setRight(AVLNode* SN){pRight = SN;}
 	void setLeft(AVLNode* SN){pLeft = SN;}

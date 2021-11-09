@@ -11,6 +11,8 @@ private:
 
 public:
 	BpTreeDataNode(){
+		pNext = NULL;
+		pPrev = NULL;
 	}
 	~BpTreeDataNode(){
 	}

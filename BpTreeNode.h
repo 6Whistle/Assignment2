@@ -8,6 +8,8 @@ private:
 
 public:
 	BpTreeNode() {
+		pParent = NULL;
+		pMostLeftChild = NULL;
 	}
 	~BpTreeNode() {
 	}

@@ -15,7 +15,7 @@ public:
 		root=NULL;
 	}
 	~AVLTree(){
-		DeleteTree();
+
 	};
 	bool		Insert(VaccinationData* pVac);
 	VaccinationData*	Search(string name);

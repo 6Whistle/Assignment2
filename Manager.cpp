@@ -19,9 +19,11 @@ void Manager::run(const char* command_txt) {
 	command_file.open(command_txt);
 	log_file.open("log.txt", ios::app);
 
-	if(~command_file.is_open())
+	if(!command_file.is_open())
 	{
 		log_file << "Can't find " << command_txt << endl;
+		log_file.close();
+		return;
 	}
 	
 	char cmd[50];
@@ -32,13 +34,13 @@ void Manager::run(const char* command_txt) {
 		command_file.getline(cmd, 50);
 		pCmd = strtok(cmd, " ");
 
-		if(strcmp(pCmd, "") == 0)
+		if(pCmd == NULL)
 		{
 			continue;
 		}
 		else if(strcmp(pCmd, "LOAD") == 0)
 		{
-			if(~LOAD())
+			if(LOAD())
 			{
 				log_file << "========== LOAD ==========" <<endl;
 				log_file << "Success" << endl;
@@ -51,7 +53,7 @@ void Manager::run(const char* command_txt) {
 		}
 		else if(strcmp(pCmd, "VLOAD") == 0)
 		{
-			if(VLOAD)
+			if(VLOAD())
 			{
 				log_file << "========== VLOAD ==========" <<endl;
 				log_file << "Success" << endl;
@@ -64,7 +66,16 @@ void Manager::run(const char* command_txt) {
 		}
 		else if(strcmp(pCmd, "ADD") == 0)
 		{
-			if(~ADD(pCmd))
+			pCmd = strtok(NULL, " ");
+			char* d1 = pCmd;
+			pCmd = strtok(NULL, " ");
+			char* d2 = pCmd;
+			pCmd = strtok(NULL, " ");
+			char* d3 = pCmd;
+			pCmd = strtok(NULL, " ");
+			char* d4 = pCmd;
+
+			if(!ADD(d1, d2, d3, d4))
 			{
 				printErrorCode(300);
 			}
@@ -72,20 +83,20 @@ void Manager::run(const char* command_txt) {
 		else if(strcmp(pCmd, "SEARCH_BP") == 0)
 		{
 			pCmd = strtok(NULL, " ");
-			string op1(pCmd);
+			char* op1 = pCmd;
 			pCmd = strtok(NULL, " ");
-			string op2(pCmd);
+			char* op2 = pCmd;
 
-			if(op1.compare("") != 0 && op2.compare("") != 0)
+			if(op1 != NULL && op2 != NULL)
 			{
-				if(~SEARCH_BP(op1, op2))
+				if(!SEARCH_BP(op1, op2))
 				{
 					printErrorCode(400);
 				}
 			}
-			else if(op1.compare("") != 0)
+			else if(op1 != NULL)
 			{
-				if(~SEARCH_BP(op1))
+				if(!SEARCH_BP(op1))
 				{
 					printErrorCode(400);
 				}
@@ -102,7 +113,7 @@ void Manager::run(const char* command_txt) {
 
 			if(op1.compare("") != 0)
 			{
-				if(~SEARCH_AVL(op1))
+				if(!SEARCH_AVL(op1))
 				{
 					printErrorCode(500);
 				}
@@ -115,11 +126,10 @@ void Manager::run(const char* command_txt) {
 		else if(strcmp(pCmd, "VPRINT") == 0)
 		{
 			pCmd = strtok(NULL, " ");
-			string op1(pCmd);
 
-			if(op1.compare("") != 0)
+			if(pCmd != NULL)
 			{
-				if(~VPRINT(op1))
+				if(!VPRINT(pCmd))
 				{
 					printErrorCode(600);
 				}
@@ -131,12 +141,18 @@ void Manager::run(const char* command_txt) {
 		}
 		else if(strcmp(pCmd, "PRINT_BP") == 0)
 		{
-			string startp = "A";
-			string endp = "z";
-			if(~SEARCH_BP(startp, endp))
+			if(bp->GetRoot() == NULL)
 			{
 				printErrorCode(700);
 			}
+			else
+			{
+				bp->Print();
+			}
+		}
+		else if (strcmp(pCmd, "EXIT") == 0)
+		{
+			break;
 		}
 		else
 		{
@@ -145,18 +161,24 @@ void Manager::run(const char* command_txt) {
 
 	}
 	
+	bp->DeleteBpTree();
+	avl->DeleteTree();
+	Print_vector.clear();
+	command_file.close();
+	log_file.close();
 
+	return;
 }
 
 bool Manager::LOAD() {
-	if(bp->GetRoot() == NULL)
+	if(bp->GetRoot() != NULL)
 	{
 		return false;
 	}
 	ifstream fdata;
 	fdata.open("input_data.txt");
 
-	if(~fdata.is_open())
+	if(!fdata.is_open())
 	{
 		return false;
 	}
@@ -169,7 +191,7 @@ bool Manager::LOAD() {
 		VaccinationData* Vdata = new VaccinationData;
 
 		fdata.getline(dataline, 50);
-		pData = strtok(pData, " ");
+		pData = strtok(dataline, " ");
 		
 		if(InputVaccinationData(pData, Vdata) == false)
 		{
@@ -179,15 +201,6 @@ bool Manager::LOAD() {
 		}
 
 		bp->Insert(Vdata);
-		
-		if(Vdata->GetTimes() == 1 && Vdata->GetVaccineName().compare("Janssen") == 0)
-		{
-			avl->Insert(Vdata);
-		}
-		else if(Vdata->GetTimes() == 2)
-		{
-			avl->Insert(Vdata);
-		}
 	}
 
 	fdata.close();
@@ -201,29 +214,78 @@ bool Manager::LOAD() {
 }
 
 bool Manager::VLOAD() {
+	if (!Print_vector.empty())
+	{
+		Print_vector.clear();
+	}
+
 	avl->GetVector(Print_vector);
+	if (Print_vector.empty())
+	{
+		return false;
+	}
+
+	return true;
 }
 
-bool Manager::ADD(char* pData) {
+bool Manager::ADD(char* pData1, char* pData2, char* pData3, char* pData4) {
 		
+	if (pData1 == NULL || pData2 == NULL || pData3 == NULL || pData4 == NULL)
+	{
+		return false;
+	}
+
+	for (int i = 0; pData3[i] != '\0'; i++)
+	{
+		if (isdigit(pData3[i]) == false)
+		{
+			return false;
+		}
+	}
+	int num = atoi(pData3);
+
 	VaccinationData* Vdata = new VaccinationData;
+	Vdata->SetUserName(pData1);
+	Vdata->SetVaccineName(pData2);
+	Vdata->SetTimes(0);
+	Vdata->SetAge(num);
+	Vdata->SetLocationName(pData4);
 
-	pData = strtok(NULL, " ");
-
-	if(InputVaccinationData(pData, Vdata) == false)
+	if (!bp->Insert(Vdata))
 	{
 		delete Vdata;
 		return false;
+	}
+
+	BpTreeNode* find_node = bp->searchDataNode(pData1);
+	VaccinationData* find_data = NULL;
+
+	for (auto iter = find_node->getDataMap()->begin(); iter != find_node->getDataMap()->end(); iter++)
+	{
+		if (iter->first.compare(pData1) == 0)
+		{
+			find_data = iter->second;
+			break;
+		}
+	}
+
+	if (find_data->GetTimes() == 1 && find_data->GetVaccineName().compare("Janssen") == 0)
+	{
+		avl->Insert(find_data);
+	}
+	else if (find_data->GetTimes() == 2)
+	{
+		avl->Insert(find_data);
 	}
 
 	ofstream flog;
 	flog.open("log.txt", ios::app);
 
 	flog << "========== ADD ==========" <<endl;
-	flog << Vdata->GetUserName() << " "
-		 << Vdata->GetVaccineName() << " "
-		 << Vdata->GetAge() << " "
-		 << Vdata->GetLocationName() << endl;
+	flog << pData1 << " "
+		 << pData2 << " "
+		 << pData3 << " "
+		 << pData4 << endl;
 	flog << "===========================" << endl << endl;
 
 	flog.close();
@@ -299,6 +361,7 @@ bool Manager::SEARCH_AVL(string name) {
 
 	flog.close();
 
+	return true;
 }
 
 bool Compare(VaccinationData* vac1, VaccinationData* vac2) {
@@ -356,7 +419,6 @@ bool Compare2(VaccinationData* vac1, VaccinationData* vac2) {
 }
 
 bool Manager::VPRINT(string type_) {
-	avl->GetVector(Print_vector);
 	if(Print_vector.empty())
 	{
 		return false;
@@ -369,7 +431,7 @@ bool Manager::VPRINT(string type_) {
 	{
 		sort(Print_vector.begin(), Print_vector.end(), Compare);
 		
-		for(int i = i; Print_vector[i] != NULL; i++)
+		for(int i = 0; Print_vector[i] != NULL; i++)
 		{
 			flog << "========== PRINT A ==========" <<endl;
 			flog << Print_vector[i]->GetUserName() << " "
@@ -385,7 +447,7 @@ bool Manager::VPRINT(string type_) {
 	{
 		sort(Print_vector.begin(), Print_vector.end(), Compare2);
 
-		for(int i = i; Print_vector[i] != NULL; i++)
+		for(int i = 0; Print_vector[i] != NULL; i++)
 		{
 			flog << "========== PRINT B ==========" <<endl;
 			flog << Print_vector[i]->GetUserName() << " "
@@ -421,25 +483,23 @@ void Manager::printErrorCode(int n) {
 
 bool Manager::InputVaccinationData(char* pData, VaccinationData* Vdata)
 {
-	if(strcmp(pData, "") == 0)
+	if(pData == NULL)
 	{
 		return false;
 	}
-	string name = pData;
 	Vdata->SetUserName(pData);
 
 
 	pData = strtok(NULL, " ");
-	if(strcmp(pData, "") == 0)
+	if(pData == NULL)
 	{
 		return false;
 	}
-	string name = pData;
 	Vdata->SetVaccineName(pData);
 
 
 	pData = strtok(NULL, " ");
-	if(strcmp(pData, "") == 0)
+	if(pData == NULL)
 	{
 		return false;
 	}
@@ -463,7 +523,7 @@ bool Manager::InputVaccinationData(char* pData, VaccinationData* Vdata)
 
 
 	pData = strtok(NULL, " ");
-	if(strcmp(pData, "") == 0)
+	if(pData == NULL)
 	{
 		return false;
 	}
@@ -479,11 +539,10 @@ bool Manager::InputVaccinationData(char* pData, VaccinationData* Vdata)
 
 
 	pData = strtok(NULL, " ");
-	if(strcmp(pData, "") == 0)
+	if(pData == NULL)
 	{
 		return false;
-	}
-	string name = pData;
+	};
 	Vdata->SetLocationName(pData);
 
 	return true;

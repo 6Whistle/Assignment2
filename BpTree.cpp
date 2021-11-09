@@ -16,7 +16,7 @@ bool BpTree::Insert(VaccinationData* newData){
         iter--;
         while(true)
         {
-            if((iter->first).compare(newData->GetUserName()) > 0)
+            if((iter->first).compare(newData->GetUserName()) <= 0)
             {
                 pNode = iter->second;   
                 break;
@@ -33,27 +33,22 @@ bool BpTree::Insert(VaccinationData* newData){
         }
     }
 
-    for(auto iter = pNode->getDataMap()->begin() ; iter != pNode->getDataMap()->end() ; iter++)
+    for(auto iter = pNode->getDataMap()->begin() ; iter != pNode->getDataMap()->end() ; iter++)                         //if find same name
     {
         if(iter->first.compare(newData->GetUserName()) == 0)
         {
-            if(iter->second->GetVaccineName().compare("Janssen") == 0 && iter->second->GetTimes() == 1)
+            if(!(iter->second->GetVaccineName().compare("Janssen") == 0 && iter->second->GetTimes() == 1) && !(iter->second->GetTimes() == 2))
             {
-                return false;
+                iter->second->SetTimesInc();
+                delete newData;
+                return true;
             }
-            else if(iter->second->GetTimes() == 2)
-            {
-                return false;
-            }
-            
-            iter->second->SetTimesInc();
-            delete newData;
-            newData = iter->second;
-            return true;
+
+            return false;
         }
     }
     
-    pNode->insertDataMap(newData->GetUserName(), newData);
+    pNode->insertDataMap(newData->GetUserName(), newData);          //no same data
 
     if(exceedDataNode(pNode))
     {
@@ -82,14 +77,12 @@ bool BpTree::Insert(VaccinationData* newData){
                     pNode->setParent(newNode);
                     newNode->setMostLeftChild(pNode);
                     root = newNode;
-                    splitDataNode(pNode);
+                    splitIndexNode(pNode);
 
                     return true;
                 }
-                else
-                {
-                    splitIndexNode(pNode);
-                }
+                
+                splitIndexNode(pNode);
             }
             else
             {
@@ -97,6 +90,8 @@ bool BpTree::Insert(VaccinationData* newData){
             }
         }
     }
+
+    return true;
 }
 
 BpTreeNode * BpTree::searchDataNode(string n) {
@@ -113,7 +108,7 @@ BpTreeNode * BpTree::searchDataNode(string n) {
         iter--;
         while(true)
         {
-            if((iter->first).compare(n) > 0)
+            if((iter->first).compare(n) <= 0)
             {
                 pNode = iter->second;   
                 break;
@@ -144,13 +139,17 @@ void BpTree::splitDataNode(BpTreeNode* pDataNode) {
     pDataNode->getDataMap()->erase(iter);
 
     newDataNode->setNext(pDataNode->getNext());
-    pDataNode->getNext()->setPrev(newDataNode);
+    if (pDataNode->getNext() != NULL)
+    {
+        pDataNode->getNext()->setPrev(newDataNode);
+    }
     pDataNode->setNext(newDataNode);
-    newDataNode->setNext(pDataNode);
+    newDataNode->setPrev(pDataNode);
 
     newDataNode->setParent(pDataNode->getParent());
 
     newDataNode->getParent()->insertIndexMap(newDataNode->getDataMap()->begin()->first, newDataNode);
+
 
     return;
 }
@@ -167,6 +166,9 @@ void BpTree::splitIndexNode(BpTreeNode* pIndexNode) {
     newIndexchildNode->insertIndexMap(iter->first, iter->second);
     pIndexNode->getIndexMap()->erase(iter);
     
+    newIndexchildNode->getMostLeftChild()->setParent(newIndexchildNode);
+    newIndexchildNode->getIndexMap()->begin()->second->setParent(newIndexchildNode);
+
     BpTreeNode* pParent = pIndexNode->getParent();
     newIndexchildNode->setParent(pParent);
     pParent->insertIndexMap(insert_string, newIndexchildNode);
@@ -203,7 +205,7 @@ void BpTree::SearchRange(string start, string end) {
         iter--;
         while(true)
         {
-            if((iter->first).compare(start) > 0)
+            if((iter->first).compare(start) <= 0)
             {
                 pNode = iter->second;   
                 break;
@@ -225,11 +227,16 @@ void BpTree::SearchRange(string start, string end) {
 
     auto iter = pNode->getDataMap()->begin();
 
-    flog << "======= SEARCH_BP =======" << endl;      
+    flog << "======= SEARCH_BP =======" << endl;
+
+    
     while((iter->first).compare(end) <= 0)
     {
         VaccinationData* printData = iter->second;
-        flog << printData->GetUserName() << " " << printData->GetVaccineName() << " " << printData->GetTimes() << " " << printData->GetAge() << " " << printData->GetLocationName() << endl;
+        if (iter->first.compare(start) >= 0)
+        {
+            flog << printData->GetUserName() << " " << printData->GetVaccineName() << " " << printData->GetTimes() << " " << printData->GetAge() << " " << printData->GetLocationName() << endl;
+        }
         iter++;
 
         if(iter == pNode->getDataMap()->end())
@@ -281,6 +288,7 @@ void BpTree::Print() {
 
             if(pNode == NULL)
             {
+                flog << "===========================" << endl << endl;
                 flog.close();
                 return;
             }
@@ -305,27 +313,32 @@ void BpTree::DeleteBpTree(void){
        levelQ.push(levelQ.front()->getMostLeftChild());
        auto delMap = levelQ.front()->getIndexMap();
        auto iter = delMap->begin();
-       while(~(delMap->empty()))
+       while(!(delMap->empty()))
        {
            levelQ.push(iter->second);
            iter = delMap->erase(iter);
        }
 
-       delete levelQ.front();
+       BpTreeNode* del = levelQ.front();
+       delete del;
        levelQ.pop();
     }
 
-    while(~(levelQ.empty()))
+    while(!(levelQ.empty()))
     {
         auto delMap = levelQ.front()->getDataMap();
         auto iter = delMap->begin();
-        while(~(delMap->empty()))
+        while(!(delMap->empty()))
         {
-           delete iter->second;
+           VaccinationData* delVac = iter->second;
+           delete delVac;
            iter = delMap->erase(iter);
         }
 
-        delete levelQ.front();
+        BpTreeNode* del = levelQ.front();
+        delete del;
         levelQ.pop();
     }
+
+    root = NULL;
 }
