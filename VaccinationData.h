@@ -1,5 +1,4 @@
 #pragma once
-#pragma warning(disable: 4996)
 using namespace std;
 #include <iostream>
 #include <cstring>
@@ -14,12 +13,6 @@ using namespace std;
 #include <string>
 #include <functional>
 #include <iomanip>
-
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-
-
 
 
 class VaccinationData {

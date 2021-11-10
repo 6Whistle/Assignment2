@@ -43,5 +43,7 @@ ADD Min Janssen 20 Seoul
 ADD Sun Janssen 20 Seoul
 ADD Tom Janssen 20 Seoul
 ADD Erin Janssen 20 Daegu
+SEARCH_AVL Eric
 VLOAD
 VPRINT A
+VPRINT B

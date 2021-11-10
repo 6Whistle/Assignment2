@@ -109,11 +109,10 @@ void Manager::run(const char* command_txt) {
 		else if(strcmp(pCmd, "SEARCH_AVL") == 0)
 		{
 			pCmd = strtok(NULL, " ");
-			string op1(pCmd);
 
-			if(op1.compare("") != 0)
+			if(pCmd != NULL)
 			{
-				if(!SEARCH_AVL(op1))
+				if(!SEARCH_AVL(pCmd))
 				{
 					printErrorCode(500);
 				}
@@ -352,7 +351,7 @@ bool Manager::SEARCH_AVL(string name) {
 	ofstream flog;
 	flog.open("log.txt", ios::app);
 
-	flog << "========== PRINT_AVL ==========" <<endl;
+	flog << "========== SEARCH_AVL ==========" <<endl;
 	flog << Vdata->GetUserName() << " "
 		 << Vdata->GetVaccineName() << " "
 		 << Vdata->GetTimes() << ""
@@ -432,12 +431,10 @@ bool Manager::VPRINT(string type_) {
 	}
 	else
 	{
-		Print_vector.clear();
 		flog.close();
 		return false;
 	}
 
-	Print_vector.clear();
 	flog.close();
 	return true;
 
