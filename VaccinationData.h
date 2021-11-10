@@ -16,6 +16,13 @@ using namespace std;
 #include <iomanip>
 
 
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
+
+
+
+
 class VaccinationData {
 private:
 	string UserName; // User name

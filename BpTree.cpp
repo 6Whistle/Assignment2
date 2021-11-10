@@ -244,7 +244,7 @@ void BpTree::SearchRange(string start, string end) {
             pNode = pNode->getNext();
             if(pNode == NULL)
             {
-                flog << "===========================" << endl;
+                flog << "===========================" << endl << endl;
                 flog.close();
                 return;
             }
@@ -252,7 +252,7 @@ void BpTree::SearchRange(string start, string end) {
         }
     }
     
-    flog << "===========================" << endl;
+    flog << "===========================" << endl << endl;
     flog.close();
 
     return;

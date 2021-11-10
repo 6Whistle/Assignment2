@@ -166,6 +166,7 @@ void Manager::run(const char* command_txt) {
 	Print_vector.clear();
 	command_file.close();
 	log_file.close();
+	_CrtDumpMemoryLeaks();
 
 	return;
 }
@@ -247,7 +248,7 @@ bool Manager::ADD(char* pData1, char* pData2, char* pData3, char* pData4) {
 	VaccinationData* Vdata = new VaccinationData;
 	Vdata->SetUserName(pData1);
 	Vdata->SetVaccineName(pData2);
-	Vdata->SetTimes(0);
+	Vdata->SetTimes(1);
 	Vdata->SetAge(num);
 	Vdata->SetLocationName(pData4);
 
@@ -365,57 +366,30 @@ bool Manager::SEARCH_AVL(string name) {
 }
 
 bool Compare(VaccinationData* vac1, VaccinationData* vac2) {
-	if(vac1->GetVaccineName().compare(vac2->GetVaccineName()) < 0)
+	if(vac1->GetVaccineName().compare(vac2->GetVaccineName()) == 0)
 	{
-		return vac1 < vac2;
-	}
-	if(vac1->GetVaccineName().compare(vac2->GetVaccineName()) > 0)
-	{
-		return vac1 > vac2;
+		if (vac1->GetAge() == vac2->GetAge())
+		{
+			return vac1->GetUserName() < vac2->GetUserName();
+		}
+
+		return vac1->GetAge() < vac2->GetAge();
 	}
 
-	if(vac1->GetAge() < vac2->GetAge())
-	{
-		return vac1 < vac2;
-	}
-	if(vac1->GetAge() > vac2->GetAge())
-	{
-		return vac1 > vac2;
-	}
-
-	if(vac1->GetUserName().compare(vac2->GetUserName()) < 0)
-	{
-		return vac1 < vac2;
-	}
-
-	return vac1 > vac2;
+	return vac1->GetVaccineName() < vac2->GetVaccineName();
 }
 
 bool Compare2(VaccinationData* vac1, VaccinationData* vac2) {
-	if(vac1->GetLocationName().compare(vac2->GetLocationName()) < 0)
+	if(vac1->GetLocationName().compare(vac2->GetLocationName()) == 0)
 	{
-		return vac1 < vac2;
+		if (vac1->GetAge() == vac2->GetAge())
+		{
+			return vac1->GetUserName() < vac2->GetUserName();
+		}
+		return vac1->GetAge() > vac2->GetAge();
 	}
-	if(vac1->GetLocationName().compare(vac2->GetLocationName()) > 0)
-	{
-		return vac1 > vac2;
-	}
+	return vac1->GetLocationName() < vac2->GetLocationName();
 
-	if(vac1->GetAge() > vac2->GetAge())
-	{
-		return vac1 < vac2;
-	}
-	if(vac1->GetAge() < vac2->GetAge())
-	{
-		return vac1 > vac2;
-	}
-
-	if(vac1->GetUserName().compare(vac2->GetUserName()) < 0)
-	{
-		return vac1 < vac2;
-	}
-
-	return vac1 > vac2;
 }
 
 bool Manager::VPRINT(string type_) {

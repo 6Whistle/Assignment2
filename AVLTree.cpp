@@ -1,14 +1,5 @@
 #include "AVLTree.h"
 bool AVLTree::Insert(VaccinationData* pVac){
-    if(pVac->GetTimes() != 1 && pVac->GetVaccineName().compare("Janssen") == 0)
-    {
-        return false;
-    }
-    if(pVac->GetTimes() != 2)
-    {
-        return false;
-    }
-    
     if(root == NULL)
     {
         root = new AVLNode;
@@ -264,7 +255,7 @@ int AVLTree::compare_string(string a, string b){
         
         if(islower(pb))
         {
-            pa = toupper(pb);
+            pb = toupper(pb);
         }
 
         if(pa < pb)
