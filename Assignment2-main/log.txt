@@ -1,0 +1,162 @@
+========== LOAD ==========
+Success
+===========================
+
+========== LOAD ==========
+Success
+===========================
+
+========== ADD ==========
+Elsa Janssen 49 Busan
+===========================
+
+========== ADD ==========
+Tommy Pfizer 38 Seoul
+===========================
+
+========== ERROR ==========
+600
+===========================
+
+======= PRINT_BP =======
+Denny Pfizer 0 32 Gyeonggi
+Elsa Janssen 1 49 Busan
+Emily Moderna 0 21 Incheon
+Erin AstraZeneca 0 51 Daegu
+John Pfizer 1 17 Seoul
+Tom Pfizer 1 38 Seoul
+Tommy Pfizer 1 38 Seoul
+===========================
+
+========== SEARCH_BP ==========
+Tom Pfizer 1 38 Seoul
+===========================
+
+========== ADD ==========
+John Pfizer 17 Seoul
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ERROR ==========
+300
+===========================
+
+========== ERROR ==========
+500
+===========================
+
+========== VLOAD ==========
+Success
+===========================
+
+========== PRINT A ==========
+Elsa Janssen 1 49 Busan
+===========================
+
+========== PRINT A ==========
+Emily Moderna 2 21 Incheon
+===========================
+
+========== PRINT A ==========
+John Pfizer 2 17 Seoul
+===========================
+
+========== LOAD ==========
+Success
+===========================
+
+========== ADD ==========
+Elsa Janssen 49 Busan
+===========================
+
+========== ADD ==========
+Tommy Pfizer 38 Seoul
+===========================
+
+========== ERROR ==========
+600
+===========================
+
+======= PRINT_BP =======
+Denny Pfizer 0 32 Gyeonggi
+Elsa Janssen 1 49 Busan
+Emily Moderna 0 21 Incheon
+Erin AstraZeneca 0 51 Daegu
+John Pfizer 1 17 Seoul
+Tom Pfizer 1 38 Seoul
+Tommy Pfizer 1 38 Seoul
+===========================
+
+========== SEARCH_BP ==========
+Tom Pfizer 1 38 Seoul
+===========================
+
+========== ADD ==========
+John Pfizer 17 Seoul
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ERROR ==========
+300
+===========================
+
+========== LOAD ==========
+Success
+===========================
+
+========== ADD ==========
+Elsa Janssen 49 Busan
+===========================
+
+========== ADD ==========
+Tommy Pfizer 38 Seoul
+===========================
+
+========== ERROR ==========
+600
+===========================
+
+======= PRINT_BP =======
+Denny Pfizer 0 32 Gyeonggi
+Elsa Janssen 1 49 Busan
+Emily Moderna 0 21 Incheon
+Erin AstraZeneca 0 51 Daegu
+John Pfizer 1 17 Seoul
+Tom Pfizer 1 38 Seoul
+Tommy Pfizer 1 38 Seoul
+===========================
+
+========== SEARCH_BP ==========
+Tom Pfizer 1 38 Seoul
+===========================
+
+========== ADD ==========
+John Pfizer 17 Seoul
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ADD ==========
+Emily Moderna 21 Incheon
+===========================
+
+========== ERROR ==========
+300
+===========================
+
