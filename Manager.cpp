@@ -166,7 +166,7 @@ void Manager::run(const char* command_txt) {
 	Print_vector.clear();
 	command_file.close();
 	log_file.close();
-	_CrtDumpMemoryLeaks();
+
 
 	return;
 }
@@ -404,33 +404,31 @@ bool Manager::VPRINT(string type_) {
 	if(type_.compare("A") == 0)
 	{
 		sort(Print_vector.begin(), Print_vector.end(), Compare);
-		
-		for(int i = 0; Print_vector[i] != NULL; i++)
+		flog << "========== PRINT A ==========" << endl;
+		for(int i = 0; i < Print_vector.size(); i++)
 		{
-			flog << "========== PRINT A ==========" <<endl;
 			flog << Print_vector[i]->GetUserName() << " "
 				 << Print_vector[i]->GetVaccineName() << " "
 				 << Print_vector[i]->GetTimes() << " "
 			 	 << Print_vector[i]->GetAge() << " "
-			 	 << Print_vector[i]->GetLocationName() << endl;
-			flog << "===========================" << endl << endl;			
+			 	 << Print_vector[i]->GetLocationName() << endl;	
 		}
+		flog << "===========================" << endl << endl;
 
 	}
 	else if(type_.compare("B") == 0)
 	{
 		sort(Print_vector.begin(), Print_vector.end(), Compare2);
-
-		for(int i = 0; Print_vector[i] != NULL; i++)
+		flog << "========== PRINT B ==========" << endl;
+		for(int i = 0; i < Print_vector.size(); i++)
 		{
-			flog << "========== PRINT B ==========" <<endl;
 			flog << Print_vector[i]->GetUserName() << " "
 				 << Print_vector[i]->GetVaccineName() << " "
 				 << Print_vector[i]->GetTimes() << " "
 			 	 << Print_vector[i]->GetAge() << " "
-			 	 << Print_vector[i]->GetLocationName() << endl;
-			flog << "===========================" << endl << endl;			
+			 	 << Print_vector[i]->GetLocationName() << endl;		
 		}
+		flog << "===========================" << endl << endl;
 	}
 	else
 	{

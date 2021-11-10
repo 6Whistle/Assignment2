@@ -3,8 +3,10 @@
 
 int main()
 {
-	Manager k(3);
-	k.run("command.txt");
+	Manager* k = new Manager(3);
+	k->run("command.txt");
+	delete k;
+	_CrtDumpMemoryLeaks();
     return 0;
 }
 

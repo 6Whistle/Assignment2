@@ -15,7 +15,6 @@ using namespace std;
 #include <functional>
 #include <iomanip>
 
-
 #define _CRTDBG_MAP_ALLOC
 #include <cstdlib>
 #include <crtdbg.h>

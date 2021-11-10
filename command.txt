@@ -1,0 +1,47 @@
+LOAD
+PRINT_BP
+ADD jam pfizer 65 15 Seoul
+ADD Jiwon Janssen 23 Seoul
+ADD Wang
+ADD Wang Janssen
+ADD Wang Janssen 12
+PRINT_BP
+ADD Tom Pfizer 38 Seoul
+SEARCH_BP H S
+ADD Tom Pfizer 38 Seoul
+ADD Won Janssen 20 Busan
+ADD Jin Janssen 15 Seoul
+ADD Ham Pfizer 65 Incheon
+ADD Bobby Moderna 20 Seoul
+ADD Teddy AstraZeneca 19 Incheon
+ADD Bob Janssen 48 Daegu
+ADD Ann Janssen 21 Seoul
+ADD Ami Janssen 25 Seoul
+ADD Jinks Janssen 21 Seoul
+ADD Set Janssen 30 Seoul
+ADD Geng Janssen 21 Seoul
+ADD Yumi Janssen 29 Seoul
+ADD Garen Janssen 29 Seoul
+ADD Kamil Janssen 30 Seoul
+ADD Lux Janssen 22 Seoul
+ADD Vi Janssen 14 Seoul
+ADD Ari Janssen 34 Seoul
+ADD Nidali Janssen 50 Seoul
+PRINT_BP
+
+ADD Emily Janssen 20 Incheon
+ADD Denny Janssen 20 Gyeonggi
+ADD John Janssen 20 Seoul
+ADD Elsa Janssen 20 Busan
+ADD Bobby Janssen 20 Seoul
+ADD Eric Janssen 20 Busan
+ADD Teddy Janssen 20 Incheon
+ADD Tomi Janssen 20 Incheon
+ADD Yun Janssen 20 Seoul
+ADD Pig Janssen 20 Seoul
+ADD Min Janssen 20 Seoul
+ADD Sun Janssen 20 Seoul
+ADD Tom Janssen 20 Seoul
+ADD Erin Janssen 20 Daegu
+VLOAD
+VPRINT A
