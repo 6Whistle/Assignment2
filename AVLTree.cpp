@@ -172,11 +172,11 @@ bool AVLTree::Insert(VaccinationData* pVac){
     {
         root = rootsub;
     }
-    else if(a == pa->getLeft())     //a
+    else if(a == pa->getLeft())     //left rotate
     {
         pa->setLeft(rootsub);
     }
-    else
+    else                            //right rotate
     {
         pa->setRight(rootsub);
     }
@@ -184,51 +184,53 @@ bool AVLTree::Insert(VaccinationData* pVac){
     return true;
 }
 
+//Give data to vector
 void AVLTree::GetVector(vector<VaccinationData*>& v){
-    if(root == NULL)
+    if(root == NULL)        //if root is not exist, end
     {
         return;
     }
     
-    queue<AVLNode*> levelQ;
+    queue<AVLNode*> levelQ;     //level order
 
-    levelQ.push(root);
-    v.clear();
+    levelQ.push(root);          //push root
+    v.clear();                  //vector clear
 
-    while(!(levelQ.empty()))
+    while(!(levelQ.empty()))    //while queue is not empty
     {
-       v.push_back(levelQ.front()->getVacData());
-       if (levelQ.front()->getLeft() != NULL)
+       v.push_back(levelQ.front()->getVacData());   //insert front data at vector
+       if (levelQ.front()->getLeft() != NULL)       //if data->left is exist, push it
        {
            levelQ.push(levelQ.front()->getLeft());
        }
-       if (levelQ.front()->getRight() != NULL)
+       if (levelQ.front()->getRight() != NULL)       //if data->right is exist, push it
        {
            levelQ.push(levelQ.front()->getRight());
        }
-       levelQ.pop();
+       levelQ.pop();        //pop queue
     }
 
 }
 
+//Search name at AVLTree
 VaccinationData* AVLTree::Search(string name){
-    if(root == NULL)
+    if(root == NULL)        //if data is not exist
     {
         return NULL;
     }
 
     AVLNode* pNode = root;
-    while(pNode)
+    while(pNode)        //while pNode is not leaf
     {
-        if(compare_string(name, pNode->getVacData()->GetUserName()) == 0)
+        if(compare_string(name, pNode->getVacData()->GetUserName()) == 0)       //if find data, return it
         {
             return pNode->getVacData();
         }
-        else if(compare_string(name, pNode->getVacData()->GetUserName()) < 0)
+        else if(compare_string(name, pNode->getVacData()->GetUserName()) < 0)       //if data is in leftside, move pNode
         {
             pNode = pNode->getLeft();
         }
-        else
+        else                                                                    //if data is in rightside, move pNode
         {
             pNode = pNode->getRight();
         }
@@ -237,6 +239,7 @@ VaccinationData* AVLTree::Search(string name){
     return NULL;
 }
 
+//Compare two string(not influenced by Upper or Lower case)
 int AVLTree::compare_string(string a, string b){
     
     for(int i = 0;;i++)
@@ -244,64 +247,65 @@ int AVLTree::compare_string(string a, string b){
         char pa = a[i];
         char pb = b[i];
 
-        if(pa == '\0' && pb != '\0')
+        if(pa == '\0' && pb != '\0')    //when b is longer than a, return 1
         {
             return -1;
         }
-        else if(pa != '\0' && pb == '\0')
+        else if(pa != '\0' && pb == '\0')       //when a is longer than b, return 1
         {
             return 1;
         }
-        else if(pa == '\0' && pb == '\0')
+        else if(pa == '\0' && pb == '\0')       //if two string is same size, return 0
         {
             return 0;
         }
 
-        if(islower(pa))
+        if(islower(pa))                         //if pa is lower, make upper
         {
             pa = toupper(pa);
         }
         
-        if(islower(pb))
+        if(islower(pb))                         //if pb is lower, make upper
         {
             pb = toupper(pb);
         }
 
-        if(pa < pb)
+        if(pa < pb)                             //if a < b, return -1
         {
             return -1;
         }
-        else if(pa > pb)
+        else if(pa > pb)                        //if a > b, return 1
         {
             return 1;
         }
     }
 }
 
+//Delete AVLTree
 void AVLTree::DeleteTree(void){
-    if(root == NULL)
+    if(root == NULL)        //if data is not exist
     {
         return;
     }
     
-    queue<AVLNode*> levelQ;
+    queue<AVLNode*> levelQ;     //delete by level order
 
-    levelQ.push(root);
+    levelQ.push(root);          //push root at queue
 
-    while(!(levelQ.empty()))
+    while(!(levelQ.empty()))    //while queue is not empty
     {
        
-       if (levelQ.front()->getLeft() != NULL)
+       if (levelQ.front()->getLeft() != NULL)       //if front's leftside is not empty, push it
        {
            levelQ.push(levelQ.front()->getLeft());
        }
        
-       if (levelQ.front()->getRight() != NULL)
+       if (levelQ.front()->getRight() != NULL)      //if front's rightside is no empty, push it
        {
            levelQ.push(levelQ.front()->getRight());
        }
        
-       delete levelQ.front();
+       delete levelQ.front();                       //delete front and pop it
        levelQ.pop();
     }
 
