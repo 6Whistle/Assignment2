@@ -384,7 +384,12 @@ bool Compare(VaccinationData* vac1, VaccinationData* vac2) {
 	{
 		if (vac1->GetAge() == vac2->GetAge())
 		{
-			return vac1->GetUserName() < vac2->GetUserName();
+			string str1 = string(vac1->GetUserName().size(), '\0');
+			string str2 = string(vac2->GetUserName().size(), '\0');
+			transform(vac1->GetUserName().cbegin(), vac1->GetUserName().cend(), str1.begin(), toupper);
+			transform(vac2->GetUserName().cbegin(), vac2->GetUserName().cend(), str2.begin(), toupper);
+
+			return str1 < str2;
 		}
 
 		return vac1->GetAge() < vac2->GetAge();
@@ -399,7 +404,12 @@ bool Compare2(VaccinationData* vac1, VaccinationData* vac2) {
 	{
 		if (vac1->GetAge() == vac2->GetAge())
 		{
-			return vac1->GetUserName() < vac2->GetUserName();
+			string str1 = string(vac1->GetUserName().size(), '\0');
+			string str2 = string(vac2->GetUserName().size(), '\0');
+			transform(vac1->GetUserName().cbegin(), vac1->GetUserName().cend(), str1.begin(), toupper);
+			transform(vac2->GetUserName().cbegin(), vac2->GetUserName().cend(), str2.begin(), toupper);
+
+			return str1 < str2;
 		}
 		return vac1->GetAge() > vac2->GetAge();
 	}
@@ -534,4 +544,46 @@ bool Manager::InputVaccinationData(char* pData, VaccinationData* Vdata)
 	Vdata->SetLocationName(pData);
 
 	return true;
+}
+
+//Compare two string(not influenced by Upper or Lower case)
+int compare_string(string a, string b){
+    
+    for(int i = 0;;i++)
+    {
+        char pa = a[i];
+        char pb = b[i];
+
+        if(pa == '\0' && pb != '\0')    //when b is longer than a, return 1
+        {
+            return -1;
+        }
+        else if(pa != '\0' && pb == '\0')       //when a is longer than b, return 1
+        {
+            return 1;
+        }
+        else if(pa == '\0' && pb == '\0')       //if two string is same size, return 0
+        {
+            return 0;
+        }
+
+        if(islower(pa))                         //if pa is lower, make upper
+        {
+            pa = toupper(pa);
+        }
+        
+        if(islower(pb))                         //if pb is lower, make upper
+        {
+            pb = toupper(pb);
+        }
+
+        if(pa < pb)                             //if a < b, return -1
+        {
+            return -1;
+        }
+        else if(pa > pb)                        //if a > b, return 1
+        {
+            return 1;
+        }
+    }
 }
