@@ -151,6 +151,9 @@ void Manager::run(const char* command_txt) {
 		}
 		else if (strcmp(pCmd, "EXIT") == 0)			//if Command is "EXIT", break loop
 		{
+			log_file << "========== EXIT ==========" <<endl;
+			log_file << "Success" << endl;
+			log_file << "===========================" << endl << endl;
 			break;
 		}
 		else								//else command, print fail at log.txt
