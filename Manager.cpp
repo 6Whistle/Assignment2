@@ -205,7 +205,12 @@ bool Manager::LOAD() {
 			return false;
 		}
 
-		bp->Insert(Vdata);						//insert data
+		if (bp->Insert(Vdata) == false)						//insert data
+		{
+			delete Vdata;
+			fdata.close();
+			return false;
+		}
 	}
 
 	fdata.close();
